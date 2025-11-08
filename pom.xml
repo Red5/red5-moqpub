@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.red5.io.moq</groupId>
+    <artifactId>moqpub</artifactId>
+    <version>0.2.0</version>
+    <packaging>jar</packaging>
+    <name>Red5 MOQ Publisher</name>
+    <!-- Originally derived from MOQtail Publisher -->
+    <description>Java Red5 Publisher - Processes MP4 stream and publishes via MOQ Transport</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.plugin.validation>brief</maven.plugin.validation>
+        <!-- prevents the deploy goal from being executed accidentially -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <!-- allows tests to be built and works in conjuction with skipTests property -->
+        <maven.test.skip>false</maven.test.skip>
+        <!-- prevents built tests from running -->
+        <skipTests>false</skipTests>
+        <maven.compiler.verbose>false</maven.compiler.verbose>
+        <maven.compiler.release>21</maven.compiler.release>
+        <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <netty.version>4.1.127.Final</netty.version>
+        <netty.http3.version>4.2.6.Final</netty.http3.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <logback.version>1.5.16</logback.version>
+        <jackson.version>2.18.2</jackson.version>
+        <mp4parser.version>1.9.56</mp4parser.version>
+        <picocli.version>4.7.6</picocli.version>
+    </properties>
+    <dependencies>
+        <!-- Netty's HTTP/3 Codec Implementation (includes quic) -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http3</artifactId>
+            <version>${netty.http3.version}</version>
+        </dependency>
+        <!-- Netty's native QUIC library (Quiche - for HTTP/3) for Linux x86_64 -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-native-quic</artifactId>
+            <version>${netty.http3.version}</version>
+            <classifier>linux-x86_64</classifier>
+        </dependency>
+        <!-- Netty PKI Testing for CertificateBuilder -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-pkitesting</artifactId>
+            <version>${netty.http3.version}</version>
+        </dependency>
+        <!-- MP4 Parser -->
+        <dependency>
+            <groupId>org.mp4parser</groupId>
+            <artifactId>isoparser</artifactId>
+            <version>${mp4parser.version}</version>
+        </dependency>
+        <!-- MoQ CMAF Packaging Library -->
+        <dependency>
+            <groupId>org.red5.io.moq</groupId>
+            <artifactId>moq-cmaf</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- Jackson for JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <!-- Picocli for CLI -->
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>${picocli.version}</version>
+        </dependency>
+        <!-- SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <!-- Logback Classic (includes implementation) -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <!-- HTTP Client for event API -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.4.1</version>
+        </dependency>
+        <!-- JUnit for testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.11.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.red5.io.moq.MoqPublisher</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
