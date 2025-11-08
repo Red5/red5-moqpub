@@ -58,7 +58,7 @@
         </dependency>
         <!-- MoQ CMAF Packaging Library -->
         <dependency>
-            <groupId>org.red5.io.moq</groupId>
+            <groupId>org.red5</groupId>
             <artifactId>moq-cmaf</artifactId>
             <version>1.0.0</version>
         </dependency>
