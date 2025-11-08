@@ -24,7 +24,7 @@ This project is a Java port of the Rust MOQtail publisher from [demo-ibc25](http
 mvn clean package
 ```
 
-This will create a fat JAR with all dependencies: `target/moqpub-0.2.0.jar`
+This will create a fat JAR with all dependencies: `target/moqpub-0.3.0.jar`
 
 ## Usage
 
@@ -32,14 +32,14 @@ This will create a fat JAR with all dependencies: `target/moqpub-0.2.0.jar`
 
 ```bash
 ffmpeg -re -i input.mp4 -c copy -f mp4 -movflags frag_keyframe+empty_moov - | \
-  java -jar target/moqpub-0.2.0.jar --url https://moq-relay.red5.net:8443
+  java -jar target/moqpub-0.3.0.jar --url https://moq-relay.red5.net:8443
 ```
 
 Local dev box with big buck bunny:
 
 ```bash
 ffmpeg -re -i /media/mondain/terrorbyte/Videos/bbb-fullhd.mp4 -c copy -f mp4 -movflags frag_keyframe+empty_moov - | \
-  java -jar target/moqpub-0.2.0.jar --url https://moq-relay.red5.net:8443
+  java -jar target/moqpub-0.3.0.jar --url https://moq-relay.red5.net:8443
 ```
 
 **Note**: Native MOQ clients use port **8443** with ALPN `"moq-00"`. Port 4433 is for WebTransport/browser clients using ALPN `"h3"`.
@@ -49,7 +49,7 @@ ffmpeg -re -i /media/mondain/terrorbyte/Videos/bbb-fullhd.mp4 -c copy -f mp4 -mo
 Terminal 1 - Start publisher:
 
 ```bash
-java -jar target/moqpub-0.2.0.jar --input-source tcp --tcp-port 12346
+java -jar target/moqpub-0.3.0.jar --input-source tcp --tcp-port 12346
 ```
 
 Terminal 2 - Stream via ffmpeg:

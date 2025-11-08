@@ -2,13 +2,37 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.red5.io.moq</groupId>
+    <groupId>org.red5</groupId>
     <artifactId>moqpub</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <packaging>jar</packaging>
     <name>Red5 MOQ Publisher</name>
     <!-- Originally derived from MOQtail Publisher -->
     <description>Java Red5 Publisher - Processes MP4 stream and publishes via MOQ Transport</description>
+    <url>https://github.com/Red5/red5-server</url>
+    <organization>
+        <name>Red5</name>
+        <url>https://github.com/Red5</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/Red5/red5-moqpub.git</url>
+        <connection>scm:git:git@github.com:Red5/red5-moqpub.git</connection>
+        <developerConnection>scm:git:git@github.com:Red5/red5-moqpub.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <id>Paul Gregoire</id>
+            <email>mondain@gmail.com</email>
+        </developer>
+    </developers>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.plugin.validation>brief</maven.plugin.validation>
@@ -60,7 +84,7 @@
         <dependency>
             <groupId>org.red5</groupId>
             <artifactId>moq-cmaf</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </dependency>
         <!-- Jackson for JSON -->
         <dependency>
@@ -108,6 +132,18 @@
                 <version>3.13.0</version>
             </plugin>
             <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.0</version>
@@ -139,4 +175,86 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <!-- mvn clean deploy -P release -Dgpg.passphrase=[password] -DskipTests=true -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.11.3</version>
+                        <configuration>
+                            <verbose>false</verbose>
+                            <release>${java.release.level}</release>
+                            <failOnError>false</failOnError>
+                            <failOnWarning>false</failOnWarning>
+                            <failOnMissingJavadoc>false</failOnMissingJavadoc>
+                            <failOnEmpty>false</failOnEmpty>
+                            <warningAsError>false</warningAsError>
+                            <warnOnMissingJavadocTag>false</warnOnMissingJavadocTag>
+                            <failOnMissingSource>false</failOnMissingSource>
+                            <failOnMissingPackage>false</failOnMissingPackage>
+                            <failOnMissingMethod>false</failOnMissingMethod>
+                            <failOnMissingConstructor>false</failOnMissingConstructor>
+                            <failOnMissingType>false</failOnMissingType>
+                            <failOnMissingTypeParameter>false</failOnMissingTypeParameter>
+                            <failOnMissingParameter>false</failOnMissingParameter>
+                            <failOnMissingReturn>false</failOnMissingReturn>
+                            <tags>
+                                <tag>
+                                    <name>todo</name>
+                                    <!-- todo tag for all places -->
+                                    <placement>a</placement>
+                                    <head>To do:</head>
+                                </tag>
+                            </tags>
+                            <excludePackageNames>org.apache.*</excludePackageNames>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>ossrh</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
 </project>

@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         name = "moqpub",
         description = "Red5 Publisher - Processes MP4 stream and publishes via MOQ Transport",
         mixinStandardHelpOptions = true,
-        version = "0.2.0"
+        version = "0.3.0"
 )
 public class MoqPublisher implements Callable<Integer> {
     private static final Logger logger = LoggerFactory.getLogger(MoqPublisher.class);
