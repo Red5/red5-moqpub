@@ -238,7 +238,7 @@ Based on the MOQtail project. Contributions welcome!
 
 ## Diamond Sponsors
 
-- Red5 - [red5.net](https://red5.net)
+- Red5 - [red5.net](https://www.red5.net/media-over-quic-moq/)
 
 ## Related Projects
 
